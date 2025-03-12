@@ -1,17 +1,26 @@
 import React from 'react';
-import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
-import { View, Text, StyleSheet } from 'react-native';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-export default function BottomTab() {
+export default function BottomTab({ state, navigation }: any) {
+    const tabs = [
+        { name: 'translate', label: 'Translate', Icon: Ionicons, iconName: 'chatbox-ellipses-outline' },
+        { name: 'home', label: 'Home', Icon: AntDesign, iconName: 'home' },
+        { name: 'scan', label: 'Scan', Icon: Ionicons, iconName: 'scan-circle-outline' },
+    ];
+
     return (
         <View style={styles.bottomNavContainer}>
             <View style={styles.bottomNav}>
-                <MaterialCommunityIcons name="chat-processing-outline" size={25} style={styles.icons} />
-                <View style={styles.homeTab}>
-                    <AntDesign name="home" size={25} style={[styles.icons, { backgroundColor: "#c9c9c9" }]} />
-                    <Text style={{ paddingHorizontal: 10 }}>Home</Text>
-                </View>
-                <AntDesign name="user" size={25} style={styles.icons} />
+                {tabs.map((data: any, index) => {
+                    const isActive = state.index === index;
+                    return (
+                        <TouchableOpacity key={index} onPress={() => navigation.navigate(data.name)} style={styles.labelStyle}>
+                            <data.Icon name={data.iconName} size={25} style={[styles.icons, isActive && styles.activeTab]} />
+                            {isActive && <Text style={styles.labelText}>{data.label}</Text>}
+                        </TouchableOpacity>
+                    )
+                })}
                 <AntDesign name="setting" size={25} style={styles.icons} />
             </View>
         </View>
@@ -22,7 +31,7 @@ const styles = StyleSheet.create({
     bottomNavContainer: {
         alignItems: "center",
         backgroundColor: '#ebeced',
-        paddingBottom: 15
+        paddingVertical: 15,
     },
     bottomNav: {
         flexDirection: 'row',
@@ -34,16 +43,17 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
         borderRadius: 50
     },
-    homeTab: {
+    labelStyle: {
         backgroundColor: "#ebeced",
         flexDirection: 'row',
         alignItems: "center",
-        borderRadius: 50,
-        paddingRight: 10
+        borderRadius: 50
     },
     icons: {
         padding: 12,
         borderRadius: 50,
         backgroundColor: "#ebeced"
-    }
+    },
+    activeTab: { backgroundColor: "#c9c9c9" },
+    labelText: { fontSize: 12, paddingHorizontal: 10, paddingRight: 15 }
 });

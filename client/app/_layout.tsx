@@ -1,7 +1,7 @@
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
-import { SafeAreaView, Text, View } from "react-native";
+import { SafeAreaView } from "react-native";
 import { AppProvider } from "@/context/AppContext";
 
 export default function RootLayout() {
@@ -13,7 +13,7 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)"
             options={{
               headerLeft: () => <MaterialCommunityIcons name="chat-processing-outline" size={24} style={{ backgroundColor: '#fff', padding: 8, borderRadius: 50, marginVertical: 20, marginBottom: 10 }} />,
-              headerRight: () => <MaterialCommunityIcons name="power-settings" size={24} style={{ backgroundColor: '#fff', padding: 8, borderRadius: 50, marginVertical: 20, marginBottom: 10 }} />,
+              headerRight: () => <AntDesign name="user" size={24} style={{ backgroundColor: '#fff', padding: 8, borderRadius: 50, marginVertical: 20, marginBottom: 10 }} />,
               headerTitle: () => null,
               headerShadowVisible: false,
               headerStyle: {

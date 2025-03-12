@@ -1,4 +1,3 @@
-import BottomTab from '@/components/BottomTab';
 import Features from '@/components/Features';
 import PremiumBox from '@/components/PremiumBox';
 import React from 'react';
@@ -9,7 +8,6 @@ const Home: React.FC = () => {
         <View style={styles.container}>
             <PremiumBox />
             <Features />
-            {/* <BottomTab /> */}
         </View >
     );
 };
