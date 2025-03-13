@@ -30,8 +30,12 @@ export default function BottomTab({ state, navigation }: any) {
 const styles = StyleSheet.create({
     bottomNavContainer: {
         alignItems: "center",
-        backgroundColor: '#ebeced',
-        paddingVertical: 15,
+        // backgroundColor: '#ebeced',
+        // paddingVertical: 15,
+        position: "absolute",
+        bottom: 20,
+        left: 0,
+        right: 0
     },
     bottomNav: {
         flexDirection: 'row',
@@ -41,7 +45,12 @@ const styles = StyleSheet.create({
         width: 300,
         gap: 8,
         paddingVertical: 5,
-        borderRadius: 50
+        borderRadius: 50,
+        shadowColor: 'rgba(0, 0, 0, 0.2)',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 30,
+        elevation: 5
     },
     labelStyle: {
         backgroundColor: "#ebeced",

@@ -2,7 +2,7 @@ import { fetch } from 'expo/fetch'
 
 export const fetchData = async (payload: any, endPoint: string, onChunk: (chunk: string) => void) => {
     try {
-        const response = await fetch(`http://192.168.0.104:3000/${endPoint}`, {
+        const response = await fetch(`http://192.168.0.103:3000/${endPoint}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

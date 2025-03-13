@@ -77,19 +77,21 @@ export default function ScanText() {
 
     const renderPicture = () => {
         return (
-            <ScrollView>
-                <View style={{ alignItems: "center", flexDirection: "column" }}>
-                    <Image
-                        source={{ uri }}
-                        contentFit="contain"
-                        style={{ width: 400, aspectRatio: 1.5 }}
-                    />
-                    <Button onPress={() => setUri(null)} title="Take another picture" />
-                    <TouchableOpacity style={{ backgroundColor: "#000", padding: 7, marginVertical: 4 }} onPress={recognizeText}>
+            <View style={{ alignItems: "center", justifyContent: "center" }}>
+                <Image
+                    source={{ uri }}
+                    contentFit="contain"
+                    style={{ width: 400, aspectRatio: 1.5 }}
+                />
+                <View style={{ flexDirection: "row", alignItems: "center", gap: 8, marginVertical: 15 }}>
+                    <TouchableOpacity style={styles.pictureBtn} onPress={() => setUri(null)}>
+                        <Text style={{ color: "#fff" }}>Take another picture</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.pictureBtn} onPress={recognizeText}>
                         <Text style={{ color: "#fff" }}>Extract Text</Text>
                     </TouchableOpacity>
                 </View>
-            </ScrollView>
+            </View>
         );
     };
 
@@ -142,7 +144,7 @@ const styles = StyleSheet.create({
     },
     shutterContainer: {
         position: "absolute",
-        bottom: 44,
+        bottom: 100,
         left: 0,
         width: "100%",
         alignItems: "center",
@@ -154,15 +156,16 @@ const styles = StyleSheet.create({
         backgroundColor: "transparent",
         borderWidth: 5,
         borderColor: "white",
-        width: 85,
-        height: 85,
+        width: 75,
+        height: 75,
         borderRadius: 45,
         alignItems: "center",
         justifyContent: "center",
     },
     shutterBtnInner: {
-        width: 70,
-        height: 70,
+        width: 50,
+        height: 50,
         borderRadius: 50,
     },
+    pictureBtn: { backgroundColor: "rgb(2, 125, 129)", paddingVertical: 8, paddingHorizontal: 13, borderRadius: 6 }
 });

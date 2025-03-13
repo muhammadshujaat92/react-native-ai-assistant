@@ -8,6 +8,7 @@ const Home: React.FC = () => {
         <View style={styles.container}>
             <PremiumBox />
             <Features />
+            <View style={{ flex: 0.6 }}></View>
         </View >
     );
 };

@@ -1,7 +1,8 @@
 import { StyleSheet, TextInput, ScrollView, View, Pressable, Text, TouchableOpacity } from 'react-native'
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { fetchData } from '@/utils/helper'
 import { AppContext } from '@/context/AppContext';
+import Markdown from 'react-native-markdown-display';
 
 export default function Translate() {
     const [translation, setTranslation] = useState<string>('');
@@ -29,18 +30,21 @@ export default function Translate() {
 
     return (
         <ScrollView style={styles.container}>
-            <TextInput value={translationInput.text} onChangeText={(text) => setTranslationInput(prev => ({ ...prev, text }))} multiline placeholder='type here' style={{ backgroundColor: '#fff', height: 200, textAlignVertical: "top", borderRadius: 15, padding: 15 }} />
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingTop: 20, paddingBottom: 40 }}>
-                <TextInput value={translationInput.sourceLang} onChangeText={(sourceLang) => setTranslationInput(prev => ({ ...prev, sourceLang }))} placeholder='Select Language' style={{ backgroundColor: '#fff', borderRadius: 50, padding: 15, width: 150, textAlign: 'center' }} />
-                <TextInput value={translationInput.targetLang} onChangeText={(targetLang) => setTranslationInput(prev => ({ ...prev, targetLang }))} placeholder='Select Language' style={{ backgroundColor: '#fff', borderRadius: 50, padding: 15, width: 150, textAlign: 'center' }} />
+            <View>
+                <TextInput value={translationInput.text} onChangeText={(text) => setTranslationInput(prev => ({ ...prev, text }))} multiline placeholder='type here' style={styles.textInput} />
             </View>
-            <TouchableOpacity style={{ backgroundColor: "#000", padding: 8 }} onPress={handleTranslate}>
-                <Text style={{ color: "#fff" }}>Translate</Text>
+            <View style={styles.inputsContainer}>
+                <TextInput value={translationInput.sourceLang} onChangeText={(sourceLang) => setTranslationInput(prev => ({ ...prev, sourceLang }))} placeholder='Select Language' style={styles.languageInput} />
+                <TextInput value={translationInput.targetLang} onChangeText={(targetLang) => setTranslationInput(prev => ({ ...prev, targetLang }))} placeholder='Select Language' style={styles.languageInput} />
+            </View>
+            <TouchableOpacity style={{ backgroundColor: "#000", padding: 8, borderRadius: 8 }} onPress={handleTranslate}>
+                <Text style={{ color: "#fff", textAlign: "center", fontSize: 16 }}>Translate</Text>
             </TouchableOpacity>
-            {translation &&
-                <ScrollView>
-                    <Text style={{ backgroundColor: "#ff6600", color: "#fff" }}>{translation}</Text>
-                </ScrollView>}
+            <View style={{ marginVertical: 20, backgroundColor: "#fff", paddingHorizontal: 20, paddingVertical: 20, borderRadius: 8, minHeight: 200 }}>
+                {/* <Text style={{ color: "#fff" }}>{translation}</Text> */}
+                {translation && <Markdown>{translation}</Markdown>}
+            </View>
+            <View style={{ height: 80 }}></View>
         </ScrollView >
     )
 }
@@ -49,7 +53,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#ebeced',
-        paddingTop: 30,
-        paddingHorizontal: 15
-    }
+        // paddingTop: 30,
+        paddingHorizontal: 15,
+    },
+    textInput: { backgroundColor: '#fff', height: 200, textAlignVertical: "top", borderRadius: 15, padding: 15 },
+    inputsContainer: { flexDirection: 'row', justifyContent: 'space-between', paddingTop: 20, paddingBottom: 30 },
+    languageInput: { backgroundColor: '#fff', borderRadius: 50, padding: 15, width: 150, textAlign: 'center' }
 })

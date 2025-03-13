@@ -36,18 +36,18 @@ export default function Features() {
 }
 
 const styles = StyleSheet.create({
-    icons: {
-        padding: 9,
-        borderRadius: 50,
-        backgroundColor: '#ebeced',
-        width: 45
-    },
     container: {
         flex: 3,
         // backgroundColor: "#075ce6",
         padding: 20,
         flexDirection: "row",
         gap: 10,
+    },
+    icons: {
+        padding: 9,
+        borderRadius: 50,
+        backgroundColor: '#ebeced',
+        width: 45
     },
     bots: {
         flexShrink: 1,
