@@ -76,7 +76,7 @@ export default function Index() {
       flatListRef.current?.scrollToIndex({ index: currentIndex + 1 });
     } else {
       await setOnboardingSeen();
-      router.replace('/home');
+      router.replace('/auth/login');
     }
   };
 

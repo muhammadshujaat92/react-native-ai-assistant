@@ -6,6 +6,7 @@ const messageSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 const chatSchema = new mongoose.Schema({
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
     messages: [messageSchema],
     createdAt: { type: Date, default: Date.now }
 });
