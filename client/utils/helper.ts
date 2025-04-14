@@ -1,13 +1,18 @@
 import { fetch } from 'expo/fetch'
+import { getAuthToken } from './storage';
 
 export const fetchData = async (payload: any, endPoint: string, onChunk?: (chunk: string) => void) => {
     try {
-        const response = await fetch(`http://192.168.0.103:3000/${endPoint}`, {
+        const token = await getAuthToken();
+        const headers: Record<string, string> = {
+            "Content-Type": "application/json",
+            Accept: "text/event-stream",
+            ...(token ? { 'auth-token': token } : {})
+        };
+
+        const response = await fetch(`http://192.168.0.104:3000/${endPoint}`, {
             method: payload ? "POST" : "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Accept: 'text/event-stream'
-            },
+            headers,
             body: payload ? JSON.stringify(payload) : undefined,
         });
 

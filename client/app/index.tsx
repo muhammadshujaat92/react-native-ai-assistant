@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, ReactNode } from 'react';
 import { View, Text, FlatList, StyleSheet, Dimensions, TouchableOpacity, ViewToken, ActivityIndicator, Image, ImageSourcePropType } from 'react-native';
 import { useRouter } from 'expo-router';
-import { hasSeenOnboarding, setOnboardingSeen } from '../utils/storage';
+import { getAuthToken, hasSeenOnboarding, setOnboardingSeen } from '../utils/storage';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const botImage = require("@/assets/images/onboardBot.png");
@@ -53,10 +53,15 @@ export default function Index() {
   useEffect(() => {
     (async () => {
       const seen = await hasSeenOnboarding();
+      const token = await getAuthToken();
       if (seen) {
-        router.replace('/home');
+        if (token) {
+          router.replace('/home');
+        } else {
+          router.replace('/auth/login');
+        }
       } else {
-        setIsReady(true)
+        setIsReady(true);
       }
     })();
   }, []);
