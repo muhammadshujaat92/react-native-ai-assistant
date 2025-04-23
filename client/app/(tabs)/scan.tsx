@@ -7,6 +7,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import * as ImagePicker from 'expo-image-picker';
 import { AppContext } from "@/context/AppContext";
 import { useRouter } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function ScanText() {
     const [permission, requestPermission] = useCameraPermissions();
@@ -20,11 +21,13 @@ export default function ScanText() {
 
     if (!permission.granted) {
         return (
-            <View style={styles.container}>
-                <Text style={{ textAlign: "center" }}>
-                    We need your permission to use the camera
-                </Text>
-                <Button onPress={requestPermission} title="Grant permission" />
+            <View style={{ backgroundColor: "#000000", flex: 1 }}>
+                <LinearGradient colors={["rgba(124, 246, 173, 0.13)", '#050505',]} style={[styles.container, { paddingHorizontal: 20 }]}>
+                    <Text style={{ textAlign: "center", color: "#fff", fontSize: 25, marginBottom: 10, fontWeight: "500" }}>
+                        We need your permission to use the camera
+                    </Text>
+                    <Button onPress={requestPermission} title="Grant permission" />
+                </LinearGradient>
             </View>
         );
     }
@@ -125,8 +128,10 @@ export default function ScanText() {
     };
 
     return (
-        <View style={styles.container}>
-            {uri ? renderPicture() : renderCamera()}
+        <View style={{ backgroundColor: "#000000", flex: 1 }}>
+            <LinearGradient colors={["rgba(124, 246, 173, 0.13)", '#050505',]} style={styles.container}>
+                {uri ? renderPicture() : renderCamera()}
+            </LinearGradient>
         </View>
     );
 }
@@ -134,9 +139,9 @@ export default function ScanText() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
         alignItems: "center",
         justifyContent: "center",
+        backgroundColor: "transparent"
     },
     camera: {
         flex: 1,

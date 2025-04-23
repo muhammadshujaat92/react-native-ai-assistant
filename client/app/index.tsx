@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect, ReactNode } from 'react';
-import { View, Text, FlatList, StyleSheet, Dimensions, TouchableOpacity, ViewToken, ActivityIndicator, Image, ImageSourcePropType } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Dimensions, ViewToken, ActivityIndicator, Image, ImageSourcePropType } from 'react-native';
 import { useRouter } from 'expo-router';
 import { getAuthToken, hasSeenOnboarding, setOnboardingSeen } from '../utils/storage';
 import { LinearGradient } from 'expo-linear-gradient';
+import GradientButton from '@/components/GradientButton';
 
 const botImage = require("@/assets/images/onboardBot.png");
 const botChatImage = require("@/assets/images/botchat.png");
@@ -131,19 +132,10 @@ export default function Index() {
             />
           ))}
         </View>
-        <LinearGradient
-          colors={[
-            "#7CF6AD",
-            '#15D2E9',
-          ]}
-          style={{ borderRadius: 25 }}
-        >
-          <TouchableOpacity style={styles.button} onPress={nextSlide}>
-            <Text style={styles.buttonText}>
-              {currentIndex === slides.length - 1 ? 'Get Started' : 'Next'}
-            </Text>
-          </TouchableOpacity>
-        </LinearGradient>
+        <GradientButton
+          title={currentIndex === slides.length - 1 ? 'Get Started' : 'Next'}
+          onPress={nextSlide}
+          buttonStyle={styles.button} />
       </View>
     </View >
   );

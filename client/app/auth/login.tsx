@@ -1,38 +1,60 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
+import AuthForm from '@/components/AuthForm'
+import { Alert, StyleSheet } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
-import { Link } from 'expo-router'
+import { fetchData } from '@/utils/helper';
+import { setAuthToken } from '@/utils/storage';
+import { useRouter } from 'expo-router';
 
 export default function login() {
-    const [loginInputs, setLoginInputs] = useState({ email: "", password: "" })
+    const [loginInputs, setLoginInputs] = useState({ email: "", password: "" });
+    const router = useRouter()
+
+    const handleChange = (field: string, value: string) => {
+        setLoginInputs(prev => ({ ...prev, [field]: value }))
+    }
+
+    const handleSubmit = async (email: string, password: string) => {
+        try {
+            const payload = { email, password };
+            if (!email || !password) {
+                Alert.alert('Login Failed', "Invalid Credentials");
+                return;
+            }
+
+            const response = await fetchData(payload, "api/login")
+
+            if (response?.authToken) {
+                await setAuthToken(response.authToken);
+                Alert.alert('Signup Sucessfull', '');
+                router.replace("/home")
+            } else if (response?.error) {
+                Alert.alert("Login Failed ", response.error)
+            } else {
+                Alert.alert('Login Failed', 'An unexpected error occurred.');
+            }
+
+        } catch (err: any) {
+            Alert.alert('Login Failed', err.message || 'Unknown error');
+        }
+    }
 
     return (
         <LinearGradient colors={["rgba(124, 246, 173, 0.13)", '#050505',]} style={styles.container}>
-            <LinearGradient colors={["rgba(255, 255, 255, 0.15)", 'rgba(65, 65, 65, 0.35)',]} style={styles.box}>
-                <Text style={styles.heading}>Login</Text>
-                <View>
-                    <TextInput placeholderTextColor={'#919191'} style={styles.inputs} placeholder='Email' value={loginInputs.email} onChangeText={(email) => setLoginInputs(prev => ({ ...prev, email }))} />
-                    <TextInput placeholderTextColor={'#919191'} style={styles.inputs} placeholder='Password' secureTextEntry={true} value={loginInputs.password} onChangeText={(password) => setLoginInputs(prev => ({ ...prev, password }))} />
-                    <View style={{ flexDirection: "row", alignItems: "center" }}>
-                        <Text style={{ fontSize: 14, color: "#a6a4a4" }}>Don't have an account? </Text>
-                        <Link href={'/auth/signup'} style={{ color: "#d4d2d2" }}>Signup</Link>
-                    </View>
-                </View>
-                <LinearGradient colors={["#7CF6AD", '#15D2E9',]} style={{ borderRadius: 25, width: "50%" }}>
-                    <TouchableOpacity style={styles.btn}>
-                        <Text style={styles.btnText}>Login</Text>
-                    </TouchableOpacity>
-                </LinearGradient>
-            </LinearGradient>
-        </LinearGradient >
+            <AuthForm
+                heading='Login'
+                askFor="Don't have an account? "
+                linkText="Signup"
+                linkUrl="/auth/signup"
+                btnText="Login"
+                credentials={loginInputs}
+                onChange={handleChange}
+                onSubmit={() => handleSubmit(loginInputs.email, loginInputs.password)}
+                boxHeight={330} />
+        </LinearGradient>
     )
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, justifyContent: "center", alignItems: "center" },
-    box: { height: 330, width: 320, borderRadius: 10, paddingVertical: 20, paddingHorizontal: 20, justifyContent: "space-between", overflow: "hidden" },
-    heading: { fontSize: 30, fontWeight: '700', color: "#fff" },
-    inputs: { marginBottom: 20, paddingHorizontal: 15, paddingVertical: 10, borderRadius: 8, fontSize: 15, backgroundColor: "rgba(216, 216, 216, 0.13)", color: "#fff" },
-    btn: { paddingVertical: 10, paddingHorizontal: 10 },
-    btnText: { fontSize: 15, fontWeight: "500", textAlign: "center" }
+    container: { flex: 1, justifyContent: "center", alignItems: "center" }
 })

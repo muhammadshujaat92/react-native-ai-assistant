@@ -1,39 +1,61 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
+import { Alert, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
 import { LinearGradient } from 'expo-linear-gradient'
-import { Link } from 'expo-router'
+import AuthForm from '@/components/AuthForm'
+import { fetchData } from '@/utils/helper';
+import { setAuthToken } from '@/utils/storage';
+import { useRouter } from 'expo-router';
 
 export default function signup() {
-    const [signupInputs, setSignupInputs] = useState({ name: "", email: "", password: "" })
+    const [signupInputs, setSignupInputs] = useState({ name: "", email: "", password: "" });
+    const router = useRouter();
+
+    const handleChange = (field: string, value: string) => {
+        setSignupInputs(prev => ({ ...prev, [field]: value }))
+    }
+
+    const handleSubmit = async (name: string, email: string, password: string) => {
+        try {
+            const payload = { name, email, password };
+            if (!name || !email || !password) {
+                Alert.alert('Signup Failed', "Invalid Credentials");
+                return;
+            }
+
+            const response = await fetchData(payload, "api/signup");
+
+            if (response?.authToken) {
+                await setAuthToken(response.authToken);
+                Alert.alert('Signup Sucessfull', '');
+                router.replace("/home");
+            } else if (response?.error) {
+                Alert.alert('Signup Failed', response.error);
+            } else {
+                Alert.alert('Signup Failed', 'An unexpected error occurred.');
+            }
+
+        } catch (err: any) {
+            Alert.alert('Signup Failed', err.message || 'Unknown error');
+        }
+    };
 
     return (
         <LinearGradient colors={["rgba(124, 246, 173, 0.13)", '#050505',]} style={styles.container}>
-            <LinearGradient colors={["rgba(255, 255, 255, 0.15)", 'rgba(65, 65, 65, 0.35)',]} style={styles.box}>
-                <Text style={styles.heading}>Create Account</Text>
-                <View>
-                    <TextInput placeholderTextColor={'#919191'} style={styles.inputs} placeholder='Enter Your Name' value={signupInputs.name} onChangeText={(name) => setSignupInputs(prev => ({ ...prev, name }))} />
-                    <TextInput placeholderTextColor={'#919191'} style={styles.inputs} placeholder='Enter Your Email' value={signupInputs.email} onChangeText={(email) => setSignupInputs(prev => ({ ...prev, email }))} />
-                    <TextInput placeholderTextColor={'#919191'} style={styles.inputs} placeholder=' Enter Password' secureTextEntry={true} value={signupInputs.password} onChangeText={(password) => setSignupInputs(prev => ({ ...prev, password }))} />
-                    <View style={{ flexDirection: "row", alignItems: "center" }}>
-                        <Text style={{ fontSize: 14, color: "#a6a4a4" }}>Already have an account? </Text>
-                        <Link href={'/auth/login'} style={{ color: "#d4d2d2" }}>Login</Link>
-                    </View>
-                </View>
-                <LinearGradient colors={["#7CF6AD", '#15D2E9',]} style={{ borderRadius: 25, width: "50%" }}>
-                    <TouchableOpacity style={styles.btn}>
-                        <Text style={styles.btnText}>Sign Up</Text>
-                    </TouchableOpacity>
-                </LinearGradient>
-            </LinearGradient>
+            <AuthForm
+                heading='Create Account'
+                isSignupPage={true}
+                askFor='Already have an account? '
+                linkUrl='/auth/login'
+                linkText='Login'
+                btnText='Sign Up'
+                credentials={signupInputs}
+                onChange={handleChange}
+                onSubmit={() => handleSubmit(signupInputs.name, signupInputs.email, signupInputs.password)}
+                boxHeight={400} />
         </LinearGradient >
     )
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, justifyContent: "center", alignItems: "center" },
-    box: { height: 400, width: 320, borderRadius: 10, paddingVertical: 20, paddingHorizontal: 20, justifyContent: "space-between", overflow: "hidden" },
-    heading: { fontSize: 30, fontWeight: '700', color: "#fff" },
-    inputs: { marginBottom: 20, paddingHorizontal: 15, paddingVertical: 10, borderRadius: 8, fontSize: 15, backgroundColor: "rgba(216, 216, 216, 0.13)", color: "#fff" },
-    btn: { paddingVertical: 10, paddingHorizontal: 10 },
-    btnText: { fontSize: 15, fontWeight: "500", textAlign: "center" }
+    container: { flex: 1, justifyContent: "center", alignItems: "center" }
 })

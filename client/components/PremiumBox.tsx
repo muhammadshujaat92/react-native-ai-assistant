@@ -1,12 +1,13 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 
-const botImage = require("@/assets/images/bot.png");
+const botImage = require("@/assets/images/homeBot.png");
 
 export default function PremiumBox() {
     return (
         <View style={styles.container}>
-            <View style={styles.premiumBox}>
+            <LinearGradient start={{ x: 0.2, y: 0 }} colors={['#BCF489', "#15D2E9"]} style={styles.premiumBox}>
                 {/* Left Side - Text Section */}
                 <View style={styles.textContainer}>
                     <Text style={styles.title}>Premium Plan</Text>
@@ -18,7 +19,7 @@ export default function PremiumBox() {
 
                 {/* Right Side - Image */}
                 <Image source={botImage} style={styles.image} />
-            </View>
+            </LinearGradient>
         </View>
     )
 }
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
         fontSize: 13
     },
     button: {
-        backgroundColor: "#72bdfd",
+        backgroundColor: "#fff",
         width: 130,
         paddingVertical: 12,
         borderRadius: 30,
@@ -59,11 +60,11 @@ const styles = StyleSheet.create({
     buttonText: {
         textAlign: 'center',
         fontSize: 15,
-        fontWeight: '600',
-        color: "#fff",
+        fontWeight: '600'
     },
     image: {
         width: 125,
-        height: 125,
+        height: 140,
+        marginBottom: 5
     },
 });

@@ -8,10 +8,10 @@ const bycript = require('bcryptjs');
 router.post("/signup", async (req, res) => {
     try {
         const { name, email, password } = req.body;
-        if (!name || !email || !password) return res.status(404).json({ err: "Invalid Cradentials" });
+        if (!name || !email || !password) return res.status(400).json({ err: "Invalid Cradentials" });
 
         const emailExist = await User.findOne({ email });
-        if (emailExist) return res.status(404).json({ err: "Email is in use" });
+        if (emailExist) return res.status(400).json({ err: "Email is in use" });
 
         const user = new User({ name, email, password });
         await user.save()
@@ -23,10 +23,10 @@ router.post("/signup", async (req, res) => {
         }
 
         const authToken = jwt.sign(data, process.env.AUTH_SECRETE_KEY);
-        res.json({ authToken })
+        return res.status(200).json({ authToken });
 
     } catch (error) {
-        res.status(500).json({ error: "Error While Signup! ", error });
+        return res.status(500).json({ error: "Something went wrong. Please try again later." });
     }
 })
 
@@ -34,7 +34,7 @@ router.post("/login", async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        if (!email || !password) return res.status(404).json({ err: "Invalid Cradentials" });
+        if (!email || !password) return res.status(400).json({ err: "Invalid Cradentials" });
 
         const loginEmail = await User.findOne({ email });
 
@@ -51,10 +51,10 @@ router.post("/login", async (req, res) => {
         }
 
         const authToken = jwt.sign(data, process.env.AUTH_SECRETE_KEY);
-        res.json({ authToken })
+        return res.status(200).json({ authToken });
 
     } catch (error) {
-        res.status(500).json({ error: "Error While Login! ", error });
+        return res.status(500).json({ error: "Something went wrong. Please try again later." });
     }
 })
 
