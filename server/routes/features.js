@@ -110,4 +110,47 @@ router.get("/messages/:chatId", userAuth, async (req, res) => {
     }
 })
 
+router.post("/messages/:chatId", userAuth, async (req, res) => {
+    try {
+        const { prompt } = req.body;
+        const { chatId } = req.params;
+
+        if (!prompt) {
+            return res.status(400).json({ error: "Prompt is required" });
+        }
+
+        const chat = await Chat.findById(chatId);
+        if (!chat) {
+            return res.status(404).json({ error: "Chat not found" });
+        }
+
+        chat.messages.push({ role: "user", content: prompt });
+        await chat.save();
+
+        const messages = [
+            new SystemMessage("You are an AI assistant."),
+            ...chat.messages.map(msg => msg.role === "user" ? new HumanMessage(msg.content) : new SystemMessage(msg.content)),
+        ];
+
+        res.setHeader("Content-Type", "text/plain");
+        res.setHeader("Transfer-Encoding", "chunked");
+
+        const stream = await model.stream(messages);
+
+        let aiResponse = '';
+        for await (const chunk of stream) {
+            aiResponse += chunk.content;
+            res.write(chunk.content);
+        }
+
+        chat.messages.push({ role: "assistant", content: aiResponse });
+        await chat.save();
+
+        res.end();
+
+    } catch (error) {
+        res.status(500).json({ error: "Error updating chat! ", error });
+    }
+});
+
 module.exports = router;

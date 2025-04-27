@@ -1,18 +1,24 @@
 import { View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Markdown from 'react-native-markdown-display';
 import { fetchData } from '@/utils/helper';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
+import { AppContext } from '@/context/AppContext';
 
 export default function Message() {
     const [promptInput, setPromptInput] = useState('');
     const [messages, setMessages] = useState<any[]>([]);
     const { messages: chatId } = useLocalSearchParams();
+    const context = useContext(AppContext);
+    const { refreshChats }: any = context
 
     useEffect(() => {
-        if (chatId) getMessages(chatId as string)
+        if (chatId) {
+            getMessages(chatId as string)
+            refreshChats()
+        }
     }, [chatId]);
 
     const getMessages = async (id: string) => {
@@ -37,7 +43,7 @@ export default function Message() {
         setPromptInput("");
 
         let aiResponse = "";
-        await fetchData({ prompt: promptInput }, 'api/prompt', (chunk) => {
+        await fetchData({ prompt: promptInput }, `api/messages/${chatId}`, (chunk) => {
             aiResponse += chunk;
             setMessages([...messages, userMessage, { text: aiResponse, sender: 'ai' }]);
         });

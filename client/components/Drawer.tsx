@@ -1,21 +1,17 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Link } from 'expo-router'
-import { fetchData } from '@/utils/helper'
 import { AntDesign } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { AppContext } from '@/context/AppContext';
 
 export default function DrawerComponent() {
-    const [chat, setChat] = useState<{ _id: string, messages: { content: string }[] }[]>([]);
-
-    const getChats = async () => {
-        const res = await fetchData(null, 'api/chats');
-        setChat(res);
-    }
+    const context = useContext(AppContext);
+    const { chats, refreshChats }: any = context
 
     useEffect(() => {
-        getChats()
-    }, [])
+        refreshChats();
+    }, []);
 
     return (
         <View style={{ flex: 1, paddingHorizontal: 10 }}>
@@ -25,7 +21,7 @@ export default function DrawerComponent() {
                     <AntDesign name='edit' size={24} style={{ color: "#fff" }} />
                 </Link>
             </View>
-            {chat && chat.map((data) => {
+            {chats && chats.map((data: any) => {
                 const { content } = data.messages?.[0];
                 const chatTitle = content.length > 30 ? content.slice(0, 30) + "...." : content;
                 return (

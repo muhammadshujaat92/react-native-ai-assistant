@@ -10,7 +10,7 @@ export const fetchData = async (payload: any, endPoint: string, onChunk?: (chunk
             ...(token ? { 'auth-token': token } : {})
         };
 
-        const response = await fetch(`http://192.168.0.103:3000/${endPoint}`, {
+        const response = await fetch(`http://192.168.0.104:3000/${endPoint}`, {
             method: payload ? "POST" : "GET",
             headers,
             body: payload ? JSON.stringify(payload) : undefined,
